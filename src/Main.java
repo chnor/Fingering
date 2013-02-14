@@ -1,8 +1,15 @@
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+
+import org.jfugue.MidiParser;
 
 public class Main {
     
@@ -19,29 +26,53 @@ public class Main {
     }
     
     public static void main(String[] args) {
-        List<Note> notes = new ArrayList<Note>();
+        /*List<ParsedNote> notes = new ArrayList<ParsedNote>();
         
         // Simple test: C scale
-        notes.add(new Note(48, 200));
-        notes.add(new Note(50, 200));
-        notes.add(new Note(52, 200));
-        notes.add(new Note(53, 200));
-        notes.add(new Note(55, 200));
-        notes.add(new Note(57, 200));
-        notes.add(new Note(59, 200));
-        notes.add(new Note(60, 200));
+        notes.add(new ParsedNote(48, 200));
+        notes.add(new ParsedNote(50, 200));
+        notes.add(new ParsedNote(52, 200));
+        notes.add(new ParsedNote(53, 200));
+        notes.add(new ParsedNote(55, 200));
+        notes.add(new ParsedNote(57, 200));
+        notes.add(new ParsedNote(59, 200));
+        notes.add(new ParsedNote(60, 200));
         
-        notes.add(new Note(53, 200));
-        notes.add(new Note(55, 200));
-        notes.add(new Note(57, 200));
-        notes.add(new Note(59, 200));
-        notes.add(new Note(60, 200));
-        notes.add(new Note(62, 200));
-        notes.add(new Note(64, 200));
-        notes.add(new Note(65, 200));
+        notes.add(new ParsedNote(53, 200));
+        notes.add(new ParsedNote(55, 200));
+        notes.add(new ParsedNote(57, 200));
+        notes.add(new ParsedNote(59, 200));
+        notes.add(new ParsedNote(60, 200));
+        notes.add(new ParsedNote(62, 200));
+        notes.add(new ParsedNote(64, 200));
+        notes.add(new ParsedNote(65, 200));*/
+        
+        /* <USING TEST FILE> */
+        
+        File menuet = new File("C:/Users/Vladimir/Documents/dkand/Bach_Suite_no4_BWV1006a_Menuet1.mid");
+		
+		MidiParser parser = new MidiParser();
+		//MusicStringRenderer renderer = new MusicStringRenderer();
+		//parser.addParserListener(renderer);
+		MidiParserListener listener = new MidiParserListener();
+		parser.addParserListener(listener);
+		
+		try {
+			parser.parse(MidiSystem.getSequence(menuet));
+		}
+		catch(InvalidMidiDataException e) {}
+		catch(IOException e) {}
+		
+		ArrayList<ParsedNote> notes = listener.getNotes();
+		Collections.sort(notes);
+		/*for(ParsedNote n : notes) {
+			System.out.println(n.getTime() + " " + n.getValue() + " " + n.getDuration());
+		}*/
+        
+        /* </USING TEST FILE> */
         
         List<List<Fingering>> layers = new ArrayList<List<Fingering>>();
-        for (Note note : notes) {
+        for (ParsedNote note : notes) {
             layers.add(note.getPossibleFingerings());
         }
         
