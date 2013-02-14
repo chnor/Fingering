@@ -19,7 +19,7 @@ public class ReadMidi {
 		MidiParser parser = new MidiParser();
 		//MusicStringRenderer renderer = new MusicStringRenderer();
 		//parser.addParserListener(renderer);
-		JFParserListener listener = new JFParserListener();
+		MidiParserListener listener = new MidiParserListener();
 		parser.addParserListener(listener);
 		
 		try {
@@ -28,17 +28,10 @@ public class ReadMidi {
 		catch(InvalidMidiDataException e) {}
 		catch(IOException e) {}
 		
-		ArrayList<JFMidiEvent> midiEvents = listener.getEvents();
-		Collections.sort(midiEvents);
-		for(JFMidiEvent e : midiEvents) {
-			//System.out.print(e.voice + " " + e.time + " ");
-			if(e instanceof JFNoteEvent) {
-				System.out.print(e.voice + " " + e.time + " ");
-				System.out.println(((JFNoteEvent) e).note + " " + ((JFNoteEvent) e).duration);
-			}
-			else if(e instanceof JFTempoEvent) {
-				//System.out.println(((JFTempoEvent) e).tempo);
-			}
+		ArrayList<ParsedNote> notes = listener.getNotes();
+		Collections.sort(notes);
+		for(ParsedNote n : notes) {
+			System.out.println(n.time + " " + n.note + " " + n.duration);
 		}
 		
 		//listener.printCounters();
