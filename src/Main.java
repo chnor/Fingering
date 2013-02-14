@@ -21,9 +21,24 @@ public class Main {
     public static void main(String[] args) {
         List<Note> notes = new ArrayList<Note>();
         
-        notes.add(new Note(null, 40));
-        notes.add(new Note(notes.get(notes.size() - 1), 42));
-        notes.add(new Note(notes.get(notes.size() - 1), 44));
+        // Simple test: C scale
+        notes.add(new Note(48, 200));
+        notes.add(new Note(50, 200));
+        notes.add(new Note(52, 200));
+        notes.add(new Note(53, 200));
+        notes.add(new Note(55, 200));
+        notes.add(new Note(57, 200));
+        notes.add(new Note(59, 200));
+        notes.add(new Note(60, 200));
+        
+        notes.add(new Note(53, 200));
+        notes.add(new Note(55, 200));
+        notes.add(new Note(57, 200));
+        notes.add(new Note(59, 200));
+        notes.add(new Note(60, 200));
+        notes.add(new Note(62, 200));
+        notes.add(new Note(64, 200));
+        notes.add(new Note(65, 200));
         
         List<List<Fingering>> layers = new ArrayList<List<Fingering>>();
         for (Note note : notes) {

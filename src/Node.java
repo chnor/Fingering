@@ -17,11 +17,12 @@ public class Node {
     
     public Node(Node prev, Fingering fingering) {
         this.prev = prev;
+        
         this.cost = prev.cost;
         this.cost += prev.fingering.calculateReleaseCost();
         this.cost += prev.fingering.calculateTransitionCost(fingering);
         this.cost += fingering.calculateInitiateCost();
-        // TODO factor in duration cost
+        
         this.fingering = fingering;
     }
     
