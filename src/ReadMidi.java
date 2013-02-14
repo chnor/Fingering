@@ -6,7 +6,8 @@ import org.jfugue.*;
 
 
 public class ReadMidi {
-
+	//private static ArrayList<JFMidiEvent> midiEvents = new ArrayList<JFMidiEvent>();
+	
 	public static int noteNameToNumber(String noteName) {
 		
 		return 0;
@@ -30,12 +31,13 @@ public class ReadMidi {
 		ArrayList<JFMidiEvent> midiEvents = listener.getEvents();
 		Collections.sort(midiEvents);
 		for(JFMidiEvent e : midiEvents) {
-			System.out.print(e.voice + " " + e.time + " ");
+			//System.out.print(e.voice + " " + e.time + " ");
 			if(e instanceof JFNoteEvent) {
+				System.out.print(e.voice + " " + e.time + " ");
 				System.out.println(((JFNoteEvent) e).note + " " + ((JFNoteEvent) e).duration);
 			}
 			else if(e instanceof JFTempoEvent) {
-				System.out.println(((JFTempoEvent) e).tempo);
+				//System.out.println(((JFTempoEvent) e).tempo);
 			}
 		}
 		
@@ -48,7 +50,7 @@ public class ReadMidi {
 		int currentTime = 0;
 		for(int i = 0; i < tokens.length; i++) {
 			System.out.println(tokens[i]);
-			if(tokens[i].startsWith("V")) {
+			/*if(tokens[i].startsWith("V")) {
 				currentVoice = Integer.parseInt(tokens[i].substring(1));
 			}
 			else if(tokens[i].startsWith("@")) {
@@ -59,8 +61,8 @@ public class ReadMidi {
 			}
 			else {
 				split = tokens[i].split("/");
-				//midiEvents.add(new JFNoteEvent(currentTime, currentVoice, noteNameToNumber(split[0]), Double.parseDouble(split[1])));
-			}
+				midiEvents.add(new JFNoteEvent(currentTime, currentVoice, noteNameToNumber(split[0]), Double.parseDouble(split[1])));
+			}* /
 		}*/
 	}
 
