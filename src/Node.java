@@ -6,12 +6,13 @@ import java.util.ArrayList;
 public class Node {
     
     private Node prev;
-    private int cost;
+    private double cost;
     private Fingering fingering;
     
     public Node(Fingering fingering) {
         this.prev = null;
-        this.cost = fingering.calculateInitiateCost();
+        //this.cost = fingering.calculateInitiateCost();
+        this.cost = 0; // We can start from any fingering without any penalty
         this.fingering = fingering;
     }
     
@@ -30,7 +31,7 @@ public class Node {
         return prev;
     }
     
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
     

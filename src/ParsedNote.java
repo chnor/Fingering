@@ -25,9 +25,9 @@ public class ParsedNote implements Comparable<ParsedNote> {
     
     public List<Fingering> getPossibleFingerings() {
         
+        // An array of the base notes for each string
         int [] tuning = { 64, 59, 55, 50, 45, 40 };
-        int [] availableFingers = { 1, 2, 3, 4 };
-        int numFrets = 12;
+        int numFrets = 14; //Changed!!!
         
         List<Fingering> result = new ArrayList<Fingering>();
         
@@ -35,16 +35,56 @@ public class ParsedNote implements Comparable<ParsedNote> {
         for (int baseNote : tuning) {
             string++;
             int fret = note - baseNote;
+            // If the note actually exists on this string
             if (note >= baseNote && note <= baseNote + numFrets) {
                 if (note == baseNote) {
-                    // Open note
-                    for (int position = 1; position <= numFrets; position++) {
-                        result.add(new Fingering(note, string, position, 0, duration));
+                    // Open note - hand can be anywhere along the fretboard
+                    // Generate a fingering for each of the fretboard positions
+                    // This is a simplistic way to account for the hand movement
+                    // during the open note
+                    for (int position = 1; position <= numFrets; position++) { // Can positions be negative???
+                        result.add(new Fingering(note, string, position, 0, fret, duration));
                     }
                 } else {
-                    for (int finger : availableFingers) {
-                        int position = fret - finger;
-                        result.add(new Fingering(note, string, position, finger, duration));
+                    {
+                        // Index finger - always on the first fret in this position
+                        int position = fret;
+                        result.add(new Fingering(note, string, position, 1, fret, duration));
+                    }
+                    {
+                        // Long finger - always on the second fret in this position
+                        int position = fret - 1;
+                        result.add(new Fingering(note, string, position, 2, fret, duration));
+                    }
+                    {
+                        // Ring finger - on the second fret in this position
+                        int position = fret - 1;
+                        result.add(new Fingering(note, string, position, 3, fret, duration));
+                    }
+                    {
+                        // Ring finger - on the third fret in this position
+                        int position = fret - 2;
+                        result.add(new Fingering(note, string, position, 3, fret, duration));
+                    } // Can the ring finger be on the fourth fret???
+                    /*Added:*/ {
+                        // Ring finger - on the fourth fret in this position
+                        int position = fret - 3;
+                        result.add(new Fingering(note, string, position, 3, fret, duration));
+                    }
+                    {
+                        // Pinky finger - on the second fret in this position
+                        int position = fret - 1;
+                        result.add(new Fingering(note, string, position, 4, fret, duration));
+                    } //Seems to happen a little to often?
+                    {
+                        // Pinky finger - on the third fret in this position
+                        int position = fret - 2;
+                        result.add(new Fingering(note, string, position, 4, fret, duration));
+                    }
+                    {
+                        // Pinky finger - on the fourth fret in this position
+                        int position = fret - 3;
+                        result.add(new Fingering(note, string, position, 4, fret, duration));
                     }
                 }
             }
