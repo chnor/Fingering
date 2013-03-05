@@ -9,7 +9,7 @@ public class ParsedNote implements Comparable<ParsedNote> {
     private long time;
     
     private static final int MIN_ALLOWED_NOTE = 40;
-    private static final int MAX_ALLOWED_NOTE = 64 + 12;
+    private static final int MAX_ALLOWED_NOTE = 64 + 14;
     
     public ParsedNote(long time, byte note, long duration) {
     	this.time = time;
@@ -42,46 +42,60 @@ public class ParsedNote implements Comparable<ParsedNote> {
                     // Generate a fingering for each of the fretboard positions
                     // This is a simplistic way to account for the hand movement
                     // during the open note
-                    for (int position = 1; position <= numFrets; position++) { // Can positions be negative???
+                    // xogede: Can positions be negative???
+                    // chnor: No, nor 0
+                    for (int position = 1; position <= numFrets; position++) {
                         result.add(new Fingering(note, string, position, 0, fret, duration));
                     }
                 } else {
-                    {
+                    // Condition is always true, but if it were left out
+                    // you'd probably wonder if it's left out by mistake
+                    // or not...
+                    if (fret > 0) {
                         // Index finger - always on the first fret in this position
                         int position = fret;
                         result.add(new Fingering(note, string, position, 1, fret, duration));
                     }
-                    {
+                    // chnor: Couldn't the index finger be placed on the
+                    //      first fret. Open A major for instance...
+                    if (fret - 1 > 0) {
                         // Long finger - always on the second fret in this position
                         int position = fret - 1;
                         result.add(new Fingering(note, string, position, 2, fret, duration));
                     }
-                    {
+                    if (fret - 1 > 0) {
                         // Ring finger - on the second fret in this position
                         int position = fret - 1;
                         result.add(new Fingering(note, string, position, 3, fret, duration));
                     }
-                    {
+                    if (fret - 2 > 0) {
                         // Ring finger - on the third fret in this position
                         int position = fret - 2;
                         result.add(new Fingering(note, string, position, 3, fret, duration));
-                    } // Can the ring finger be on the fourth fret???
-                    /*Added:*/ {
+                    }
+                    // xogede: Can the ring finger be on the fourth fret???
+                    // chnor: Why not? But it's unlikely to appear since
+                    //      the ring finger is avoided
+                    if (fret - 3 > 0) {
                         // Ring finger - on the fourth fret in this position
                         int position = fret - 3;
                         result.add(new Fingering(note, string, position, 3, fret, duration));
                     }
-                    {
+                    if (fret - 1 > 0) {
                         // Pinky finger - on the second fret in this position
                         int position = fret - 1;
                         result.add(new Fingering(note, string, position, 4, fret, duration));
-                    } //Seems to happen a little to often?
-                    {
+                    }
+                    // xogede: Seems to happen a little to often?
+                    // chnor: Pinky on third happens too often for my
+                    //      tastes too, but it's consistent with Falk's
+                    //      rule to prefer the pinky over the ring finger
+                    if (fret - 2 > 0) {
                         // Pinky finger - on the third fret in this position
                         int position = fret - 2;
                         result.add(new Fingering(note, string, position, 4, fret, duration));
                     }
-                    {
+                    if (fret - 3 > 0) {
                         // Pinky finger - on the fourth fret in this position
                         int position = fret - 3;
                         result.add(new Fingering(note, string, position, 4, fret, duration));
