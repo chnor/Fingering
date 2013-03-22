@@ -47,12 +47,16 @@ public class Main {
             }
         }
         
-        int pos_per_measure = (int)Math.round(minDuration/maxDuration);
+        int pos_per_measure = (int)Math.round(maxDuration/minDuration);
+        //pos_per_measure = 16;
+        int measures_per_line = 4;
+        int measureCount = 0;
         int currentPosition = -1;
         int posInMeasure = 0;
         
         int lineWidth = 80;
         for (Fingering fingering : fingerings) {
+            
             if (strings.get(0).length() >= lineWidth) {
                 System.out.println(position.substring(0, Math.min(lineWidth, position.length())));
                 for (StringBuilder string : strings) {
@@ -63,7 +67,7 @@ public class Main {
                 finger.setLength(0);
                 System.out.println();
                 position.setLength(0);
-                posInMeasure = 0;
+                //posInMeasure = 0;
             }
             
             for (int i = 0; i < 6; i++) {
@@ -72,8 +76,8 @@ public class Main {
                 } else {
                     strings.get(i).append("-");
                 }
-                posInMeasure++;
             }
+            posInMeasure++;
             finger.append(fingering.getFinger() == 0 ? " " : fingering.getFinger());
             if (fingering.getPosition() == currentPosition) {
                 position.append(" ");
@@ -87,15 +91,59 @@ public class Main {
                 }
                 finger.append(" ");
                 position.append(" ");
+                posInMeasure++;
+                
+                /* XXX Measure boundary can occur here too */
+                /*
+                if (posInMeasure >= pos_per_measure) {
+                    if (measureCount >= measures_per_line) {
+                        System.out.println(position.substring(0, Math.min(lineWidth, position.length())));
+                        for (StringBuilder string : strings) {
+                            System.out.println(string.substring(0, Math.min(lineWidth, string.length())));
+                            string.setLength(0);
+                        }
+                        System.out.println(finger.substring(0, Math.min(lineWidth, finger.length())));
+                        finger.setLength(0);
+                        System.out.println();
+                        position.setLength(0);
+                        measureCount = 0;
+                        //posInMeasure = 0;
+                    } else {
+                        for (int j = 0; j < 6; j++) {
+                            strings.get(j).append("|");
+                        }
+                        finger.append(" ");
+                        position.append(" ");
+                        measureCount++;
+                    }
+                    posInMeasure = 0;
+                }
+                */
             }
             
+            /* Have we crossed a measure boundary */
             /*
             if (posInMeasure >= pos_per_measure) {
-                for (int i = 0; i < 6; i++) {
-                    strings.get(i).append("|");
+                if (measureCount >= measures_per_line) {
+                    System.out.println(position.substring(0, Math.min(lineWidth, position.length())));
+                    for (StringBuilder string : strings) {
+                        System.out.println(string.substring(0, Math.min(lineWidth, string.length())));
+                        string.setLength(0);
+                    }
+                    System.out.println(finger.substring(0, Math.min(lineWidth, finger.length())));
+                    finger.setLength(0);
+                    System.out.println();
+                    position.setLength(0);
+                    measureCount = 0;
+                    //posInMeasure = 0;
+                } else {
+                    for (int i = 0; i < 6; i++) {
+                        strings.get(i).append("|");
+                    }
+                    finger.append(" ");
+                    position.append(" ");
+                    measureCount++;
                 }
-                finger.append(" ");
-                position.append(" ");
                 posInMeasure = 0;
             }
             */
