@@ -12,13 +12,21 @@ public class Fingering {
     private int position;
     private int finger;
     private int fret;
-    private long duration;
+    private double duration;
     
     public static final int OPEN  = 0;
     public static final int INDEX = 1;
     public static final int LONG  = 2;
     public static final int RING  = 3;
     public static final int PINKY = 4;
+    
+    /*
+     * Apply a penalty inversely proportional to the
+     * length of the note.
+     * DURATION_PENALTY = 1 applies the whole penalty
+     * DURATION_PENALTY = 0 applies no penalty
+     */
+    private static final double DURATION_PENALTY = 1;
     
     /*Added:*/
     private static final double FRETBOARD_LENGTH = 64.9; //64.77; //cm
@@ -144,7 +152,7 @@ public class Fingering {
     //private static final double HAND_STRETCH_PENALTY = 0.8;
     private static final double HAND_STRETCH_PENALTY = 0.5; //Augmented by PHYSICAL_STRETCH_PENALTY_...!
     
-    public Fingering(int note, int string, int position, int finger, int fret, long duration) {
+    public Fingering(int note, int string, int position, int finger, int fret, double duration) {
         this.note = note;
         this.string = string;
         this.position = position;
@@ -253,6 +261,12 @@ public class Fingering {
         return result;
     }
     
+    public double calculateDurationCostModifier() {
+        // DURATION_PENALTY = 1 applies the whole penalty
+        // DURATION_PENALTY = 0 applies no penalty
+        return (1 / Math.pow(getDuration(), DURATION_PENALTY));
+    }
+    
     public int getString() {
         return string;
     }
@@ -265,7 +279,7 @@ public class Fingering {
         return position;
     }
     
-    public long getDuration() {
+    public double getDuration() {
         return duration;
     }
     

@@ -19,10 +19,12 @@ public class Node {
     public Node(Node prev, Fingering fingering) {
         this.prev = prev;
         
+        double M = prev.fingering.calculateDurationCostModifier();
+        
         this.cost = prev.cost;
         this.cost += prev.fingering.calculateReleaseCost();
-        this.cost += prev.fingering.calculateTransitionCost(fingering);
-        this.cost += fingering.calculateInitiateCost();
+        this.cost += M * prev.fingering.calculateTransitionCost(fingering);
+        this.cost += M * fingering.calculateInitiateCost();
         
         this.fingering = fingering;
     }

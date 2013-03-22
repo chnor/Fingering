@@ -37,14 +37,19 @@ public class Main {
         StringBuilder finger = new StringBuilder();
         StringBuilder position = new StringBuilder();
         
-        long minDuration = Integer.MAX_VALUE;
+        double minDuration = Double.POSITIVE_INFINITY;
+        double maxDuration = Double.NEGATIVE_INFINITY;
         for (Fingering fingering : fingerings) {
             if (fingering.getDuration() < minDuration) {
                 minDuration = fingering.getDuration();
+            } else if (fingering.getDuration() > maxDuration) {
+                maxDuration = fingering.getDuration();
             }
         }
         
+        int pos_per_measure = (int)Math.round(minDuration/maxDuration);
         int currentPosition = -1;
+        int posInMeasure = 0;
         
         int lineWidth = 80;
         for (Fingering fingering : fingerings) {
@@ -58,6 +63,7 @@ public class Main {
                 finger.setLength(0);
                 System.out.println();
                 position.setLength(0);
+                posInMeasure = 0;
             }
             
             for (int i = 0; i < 6; i++) {
@@ -66,6 +72,7 @@ public class Main {
                 } else {
                     strings.get(i).append("-");
                 }
+                posInMeasure++;
             }
             finger.append(fingering.getFinger() == 0 ? " " : fingering.getFinger());
             if (fingering.getPosition() == currentPosition) {
@@ -81,41 +88,45 @@ public class Main {
                 finger.append(" ");
                 position.append(" ");
             }
+            
+            /*
+            if (posInMeasure >= pos_per_measure) {
+                for (int i = 0; i < 6; i++) {
+                    strings.get(i).append("|");
+                }
+                finger.append(" ");
+                position.append(" ");
+                posInMeasure = 0;
+            }
+            */
         }
+        
         System.out.println(position.substring(0, Math.min(lineWidth, position.length())));
         for (StringBuilder string : strings) {
             System.out.println(string.substring(0, Math.min(lineWidth, string.length())));
         }
         System.out.println(finger.substring(0, Math.min(lineWidth, finger.length())));
         System.out.println();
+        
+        /*
+        System.out.println(position.substring(0, Math.min(lineWidth, position.length())));
+        for (StringBuilder string : strings) {
+            System.out.println(string.substring(0, Math.min(lineWidth, string.length())));
+        }
+        System.out.println(finger.substring(0, Math.min(lineWidth, finger.length())));
+        System.out.println();
+        */
     }
     
     public static void main(String[] args) {
-        /*List<ParsedNote> notes = new ArrayList<ParsedNote>();
         
-        // Simple test: C scale
-        notes.add(new ParsedNote(0, 48, 200));
-        notes.add(new ParsedNote(0, 50, 200));
-        notes.add(new ParsedNote(0, 52, 200));
-        notes.add(new ParsedNote(0, 53, 200));
-        notes.add(new ParsedNote(0, 55, 200));
-        notes.add(new ParsedNote(0, 57, 200));
-        notes.add(new ParsedNote(0, 59, 200));
-        notes.add(new ParsedNote(0, 60, 200));
+        if (args.length < 1) {
+            System.out.println("No input file specified");
+            return;
+        }
         
-        notes.add(new ParsedNote(0, 53, 200));
-        notes.add(new ParsedNote(0, 55, 200));
-        notes.add(new ParsedNote(0, 57, 200));
-        notes.add(new ParsedNote(0, 59, 200));
-        notes.add(new ParsedNote(0, 60, 200));
-        notes.add(new ParsedNote(0, 62, 200));
-        notes.add(new ParsedNote(0, 64, 200));
-        notes.add(new ParsedNote(0, 65, 200));*/
-        
-        /* <USING TEST FILE> */
-        
-        File menuet = new File("C:/Users/Vladimir/Documents/dkand/Bach_Suite_no4_BWV1006a_Menuet1.mid");
-        //File menuet = new File("input/Bach_Suite_no4_BWV1006a_Menuet1.mid");
+        //File menuet = new File("C:/Users/Vladimir/Documents/dkand/Bach_Suite_no4_BWV1006a_Menuet1.mid");
+        File menuet = new File(args[0]);
 		
 		MidiParser parser = new MidiParser();
 		//MusicStringRenderer renderer = new MusicStringRenderer();
@@ -131,15 +142,10 @@ public class Main {
 		
 		ArrayList<ParsedNote> notes = listener.getNotes();
 		Collections.sort(notes);
-		/*for(ParsedNote n : notes) {
-			System.out.println(n.getTime() + " " + n.getValue() + " " + n.getDuration());
-		}*/
         
         if (notes.isEmpty()) {
             System.out.println("Failed to load input file.");
         } else {
-            
-            /* </USING TEST FILE> */
             
             List<List<Fingering>> layers = new ArrayList<List<Fingering>>();
             for (ParsedNote note : notes) {
@@ -173,32 +179,39 @@ public class Main {
             }
             Collections.reverse(output);
             
-            //printTablature(output);
+            /*
+	        for(ParsedNote n : notes) {
+		        System.out.println(n.getTime() + " " + n.getValue() + " " + n.getDuration());
+	        }
+	        */
+	        
+            printTablature(output);
             
-            System.out.println("Position: " + output.get(0).getPosition());
-           // boolean outputString = true;
-            for(int i = 0; i < output.size(); i++) {
-            	if(i > 0 && output.get(i).getPosition() != output.get(i - 1).getPosition()) {
-            		System.out.println();
-            		System.out.println("Position: " + output.get(i).getPosition());
-            		//outputString = true;
-            	}
-            	
-            	if(output.get(i).getFinger() == Fingering.OPEN)
-            		System.out.println("Open string: " + output.get(i).getString());
-            	else if(output.get(i).getFret() != output.get(i).getPosition() + output.get(i).getFinger() - 1)
-            		System.out.println("Fin: " + output.get(i).getFinger() + ", Str: " + output.get(i).getString() /*+", Duration: " + output.get(i).getDuration() +*/ + ", Fret: " + output.get(i).getFret());
-            	else //if(outputString || output.get(i).getString() != output.get(i - 1).getString())
-            		System.out.println("Fin: " + output.get(i).getFinger() + ", Str: " + output.get(i).getString() /*+", Duration: " + output.get(i).getDuration() +*/);
-            	//else
-            	//	System.out.println("Fin: " + output.get(i).getFinger() /*+", Duration: " + output.get(i).getDuration() +*/);
-            	
-            	//outputString = false;
+            /*
+             * chnor: Is this obsolete?
+             */
+            if (false) {
+                System.out.println("Position: " + output.get(0).getPosition());
+               // boolean outputString = true;
+                for(int i = 0; i < output.size(); i++) {
+                	if(i > 0 && output.get(i).getPosition() != output.get(i - 1).getPosition()) {
+                		System.out.println();
+                		System.out.println("Position: " + output.get(i).getPosition());
+                		//outputString = true;
+                	}
+                	
+                	if(output.get(i).getFinger() == Fingering.OPEN)
+                		System.out.println("Open string: " + output.get(i).getString());
+                	else if(output.get(i).getFret() != output.get(i).getPosition() + output.get(i).getFinger() - 1)
+                		System.out.println("Fin: " + output.get(i).getFinger() + ", Str: " + output.get(i).getString() /*+", Duration: " + output.get(i).getDuration() +*/ + ", Fret: " + output.get(i).getFret());
+                	else //if(outputString || output.get(i).getString() != output.get(i - 1).getString())
+                		System.out.println("Fin: " + output.get(i).getFinger() + ", Str: " + output.get(i).getString() /*+", Duration: " + output.get(i).getDuration() +*/);
+                	//else
+                	//	System.out.println("Fin: " + output.get(i).getFinger() /*+", Duration: " + output.get(i).getDuration() +*/);
+                	
+                	//outputString = false;
+                }
             }
-            
-            /*for (Fingering fingering : output) {
-                System.out.println(fingering);
-            }*/
         }
         
     }

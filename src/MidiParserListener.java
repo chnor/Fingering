@@ -14,7 +14,7 @@ public class MidiParserListener extends ParserListenerAdapter {
 	
 	public void noteEvent(Note note) {
 		if(note.getDuration() != 0 && currentVoice == 0)
-			notes.add(new ParsedNote(currentTime, note.getValue(), note.getDuration()));
+			notes.add(new ParsedNote(currentTime, note.getValue(), note.getDecimalDuration()));
 	}
     public void voiceEvent(Voice voice) {
     	currentVoice = voice.getVoice();

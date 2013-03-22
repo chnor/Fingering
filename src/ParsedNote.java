@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class ParsedNote implements Comparable<ParsedNote> {
     
     private byte note;
-    private long duration;
+    private double duration;
     private long time;
     
     private static final int MIN_ALLOWED_NOTE = 40;
     private static final int MAX_ALLOWED_NOTE = 64 + 14;
     
-    public ParsedNote(long time, byte note, long duration) {
+    public ParsedNote(long time, byte note, double duration) {
     	this.time = time;
         this.note = note;
         this.duration = duration;
@@ -114,7 +114,7 @@ public class ParsedNote implements Comparable<ParsedNote> {
         return note;
     }
     
-    public long getDuration() {
+    public double getDuration() {
         return duration;
     }
     
